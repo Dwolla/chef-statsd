@@ -1,81 +1,31 @@
-default["graphite"]["version"]                              = "0.9.10"
-default["graphite"]["home"]                                 = "/opt/graphite"
-default["graphite"]["carbon"]["line_receiver_interface"]    = "127.0.0.1"
-default["graphite"]["carbon"]["pickle_receiver_interface"]  = "127.0.0.1"
-default["graphite"]["carbon"]["cache_query_interface"]      = "127.0.0.1"
-default["graphite"]["carbon"]["log_updates"]                = true
-default["graphite"]["carbon"]["whisper_dir"]                = "#{node["graphite"]["home"]}/storage/whisper"
-default["graphite"]["carbon"]["max_cache_size"]             = "inf"
-default["graphite"]["carbon"]["max_creates_per_minute"]     = "inf"
-default["graphite"]["carbon"]["max_updates_per_second"]     = "1000"
-default["graphite"]["dashboard"]["timezone"]                = "America/New_York"
-default["graphite"]["dashboard"]["memcache_hosts"]          = [ "127.0.0.1:11211" ]
-default["graphite"]["dashboard"]["mysql_server"]            = ""
-default["graphite"]["dashboard"]["mysql_port"]              = ""
-default["graphite"]["dashboard"]["mysql_username"]          = ""
-default["graphite"]["dashboard"]["mysql_password"]          = ""
+default["statsd"]["dir"]                          = "/usr/share/statsd"
+default["statsd"]["conf_dir"]                     = "/etc/statsd"
+default["statsd"]["repository"]                   = "https://github.com/etsy/statsd.git"
+default["statsd"]["reference"]                    = "master"
+default["statsd"]["flush_interval"]               = 10000
+default["statsd"]["percent_threshold"]            = 90
+default["statsd"]["address"]                      = "0.0.0.0"
+default["statsd"]["port"]                         = 8125
+default["statsd"]["graphite_host"]                = "127.0.0.1"
+default["statsd"]["graphite_port"]                = 2003
+default["statsd"]["graphite_role"]                = "graphite_server"
+default["statsd"]["graphite_query"]               = "roles:#{node['statsd']['graphite_role']} AND chef_environment:#{node.chef_environment}"
+default["statsd"]["delete_idle_stats"]            = false
+default["statsd"]["delete_timers"]                = false
+default["statsd"]["delete_gauges"]                = false
+default["statsd"]["delete_sets"]                  = false
+default["statsd"]["delete_counters"]              = false
+default["statsd"]["username"]                     = "statsd"
+default["statsd"]["dump_messages"]                = false
 
-# The default values template
-default["graphite"]["templates"]["default"]["background"]   = "black"
-default["graphite"]["templates"]["default"]["foreground"]   = "white"
-default["graphite"]["templates"]["default"]["majorLine"]    = "white"
-default["graphite"]["templates"]["default"]["minorLine"]    = "grey"
-default["graphite"]["templates"]["default"]["lineColors"]   = "blue,green,red,purple,brown,yellow,aqua,grey,magenta,pink,gold,rose"
-default["graphite"]["templates"]["default"]["fontName"]     = "Sans"
-default["graphite"]["templates"]["default"]["fontSize"]     = "10"
-default["graphite"]["templates"]["default"]["fontBold"]     = "False"
-default["graphite"]["templates"]["default"]["fontItalic"]   = "False"
+# Graphite storage config
+default["statsd"]["graphite"]["legacy_namespace"] = true
+default["statsd"]["graphite"]["global_prefix"]    = "stats"
+default["statsd"]["graphite"]["global_suffix"]    = ""
+default["statsd"]["graphite"]["prefix_counter"]   = "counters"
+default["statsd"]["graphite"]["prefix_timer"]     = "timers"
+default["statsd"]["graphite"]["prefix_gauge"]     = "gauges"
+default["statsd"]["graphite"]["prefix_set"]       = "sets"
 
-#Storage Schemas
-default["graphite"]["storage_schemas"] = [
-  {
-    :stats => {
-      :priority   => "100",
-      :pattern    => "^stats\\..*",
-      :retentions => "10s:7d,1m:31d,10m:5y"
-    }
-  },
-  {
-    :catchall => {
-      :priority   => "0",
-      :pattern    => "^.*",
-      :retentions => "60s:5y"
-    }
-  }
-]
-
-#Storage Aggregation
-default["graphite"]["storage_aggregation"] = [
-  {
-    :min => {
-      :pattern            => "\\.min$",
-      :xFilesFactor       => "0.1",
-      :aggregationMethod  => "min"
-    }
-  },
-  {
-    :max => {
-      :pattern            => "\\.max$",
-      :xFilesFactor       => "0.1",
-      :aggregationMethod  => "max"
-    }
-  },
-  {
-    :sum => {
-      :pattern            => "\\.count$",
-      :xFilesFactor       => "0",
-      :aggregationMethod  => "sum"
-    }
-  },
-  {
-    :default_average => {
-      :pattern            => ".*",
-      :xFilesFactor       => "0.3",
-      :aggregationMethod  => "average"
-    }
-  }
-]
-
-
-
-
+# nodejs
+default["statsd"]["nodejs_bin"] = "#{node["nodejs"]["dir"]}/bin/node"
